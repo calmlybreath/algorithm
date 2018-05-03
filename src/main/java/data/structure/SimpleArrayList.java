@@ -138,8 +138,9 @@ public class SimpleArrayList<E> {
     @SuppressWarnings("unchecked")
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+        Object[] dumpArray=elementData;
         for (int i = 0; i < size; i++) {
-            stringBuilder.append(((E) elementData[i]));
+            stringBuilder.append(((E) dumpArray[i]));
             stringBuilder.append('+');
         }
         return stringBuilder.toString();

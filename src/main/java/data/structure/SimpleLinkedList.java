@@ -2,6 +2,12 @@ package data.structure;
 
 import java.util.LinkedList;
 
+/**
+ * 双向链表类
+ * The type Simple linked list.
+ *
+ * @param <E> the type parameter
+ */
 public class SimpleLinkedList<E> {
     private Node<E> frist;
     private Node<E> last;
@@ -9,13 +15,27 @@ public class SimpleLinkedList<E> {
     private int modCount = 0;
     private LinkedList a;
 
+    /**
+     * Instantiates a new Simple linked list.
+     */
     public SimpleLinkedList() {
     }
 
+    /**
+     * Add.
+     *
+     * @param e the e
+     */
     public void add(E e) {
         linkLast(e);
     }
 
+    /**
+     * Get e.
+     *
+     * @param index the index
+     * @return the e
+     */
     public E get(int index) {
         checkIndex(index);
         Node<E> target = frist;
@@ -57,6 +77,9 @@ public class SimpleLinkedList<E> {
         modCount++;
     }
 
+    /**
+     * Reverse.
+     */
     public void reverse() {
         Node<E> fnode = frist;
         Node<E> node = frist;
@@ -70,32 +93,28 @@ public class SimpleLinkedList<E> {
         last = fnode;
     }
 
+    /**
+     * Unlink frist.
+     */
     public void unlinkFrist() {
         if (frist == null) {
             return;
         }
         frist = frist.next;
         size--;
+        modCount++;
     }
 
+    /**
+     * Unlink last.
+     */
     public void unlinkLast() {
         if (last == null) {
             return;
         }
         last = last.pre;
         size--;
-    }
-
-    private static class Node<E> {
-        E value;
-        Node<E> pre;
-        Node<E> next;
-
-        Node(Node<E> pre, E e, Node<E> next) {
-            this.value = e;
-            this.pre = pre;
-            this.next = next;
-        }
+        modCount++;
     }
 
     @Override
@@ -108,5 +127,33 @@ public class SimpleLinkedList<E> {
             node = node.next;
         }
         return stringBuilder.toString();
+    }
+
+    private static class Node<E> {
+        /**
+         * The Value.
+         */
+        E value;
+        /**
+         * The Pre.
+         */
+        Node<E> pre;
+        /**
+         * The Next.
+         */
+        Node<E> next;
+
+        /**
+         * Instantiates a new Node.
+         *
+         * @param pre  the pre
+         * @param e    the e
+         * @param next the next
+         */
+        Node(Node<E> pre, E e, Node<E> next) {
+            this.value = e;
+            this.pre = pre;
+            this.next = next;
+        }
     }
 }
