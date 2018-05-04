@@ -1,6 +1,7 @@
-package algs.other;
+package algstest.other;
 
-import org.junit.*;
+import algs.other.HexOct;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 

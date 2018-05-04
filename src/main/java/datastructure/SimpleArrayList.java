@@ -1,4 +1,4 @@
-package data.structure;
+package datastructure;
 
 /**
  * The type Simple array list.

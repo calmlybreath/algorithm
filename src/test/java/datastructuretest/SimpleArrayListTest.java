@@ -1,6 +1,6 @@
-package data.structure.test;
+package datastructuretest;
 
-import data.structure.SimpleArrayList;
+import datastructure.SimpleArrayList;
 import org.junit.*;
 
 import static org.junit.Assert.assertEquals;

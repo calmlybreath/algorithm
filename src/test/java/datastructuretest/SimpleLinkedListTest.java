@@ -1,7 +1,6 @@
-package data.structure.test;
+package datastructuretest;
 
-import data.structure.SimpleLinkedList;
-import org.junit.Assert;
+import datastructure.SimpleLinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
