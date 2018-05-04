@@ -102,10 +102,10 @@ public class INToRPN {
             return true;
         }
         if (item == '+' || item == '-') {
-            return peek == '*' || peek == '/';
+            return false;
         }
         if (item == '*' || item == '/') {
-            return peek == '*' || peek == '/';
+            return peek != '*' && peek != '/';
         }
         throw new IllegalArgumentException("参数错误");
     }

@@ -1,6 +1,7 @@
 package algstest.stack;
 
 import algs.stack.INToRPN;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class INToRPNTest {
@@ -8,6 +9,10 @@ public class INToRPNTest {
     public void testInfixExpressionToRPN(){
         INToRPN inToRPN = new INToRPN();
         inToRPN.infixExpressionToRPN("1-(1-2)");
-        System.out.println("inToRPN.toString() = " + inToRPN.toString());
+        Assert.assertEquals("112--",inToRPN.toString());
+        inToRPN.infixExpressionToRPN("(1-2)*3");
+        Assert.assertEquals("12-3*",inToRPN.toString());
+        inToRPN.infixExpressionToRPN("1+2*3+(4*5+6)*7");
+        Assert.assertEquals("123*+45*6+7*+",inToRPN.toString());
     }
 }
