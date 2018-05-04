@@ -24,17 +24,30 @@ public class INToRPN {
 
     /**
      * Infix expression to rpn.
+     * 中缀表达式a + b*c + (d * e + f) * g，其转换成后缀表达式则为a b c * + d e * f  + g * +。
+     * <p>
+     * 转换过程需要用到栈，具体过程如下：
+     * <p>
+     * 1）如果遇到操作数，我们就直接将其输出。
+     * <p>
+     * 2）如果遇到操作符，则我们将其放入到栈中，遇到左括号时我们也将其放入栈中。
+     * <p>
+     * 3）如果遇到一个右括号，则将栈元素弹出，将弹出的操作符输出直到遇到左括号为止。注意，左括号只弹出并不输出。
+     * <p>
+     * 4）如果遇到任何其他的操作符，如（“+”， “*”，“（”）等，从栈中弹出元素直到遇到发现更低优先级的元素(或者栈为空)为止。弹出完这些元素后，才将遇到的操作符压入到栈中。有一点需要注意，只有在遇到" ) "的情况下我们才弹出" ( "，其他情况我们都不会弹出" ( "。
+     * <p>
+     * 5）如果我们读到了输入的末尾，则将栈中所有元素依次弹出。
      *
      * @param expression the expression
      */
     public void infixExpressionToRPN(String expression) {
         char[] infixExpression = expression.toCharArray();
-        Stack<Character> tempRPN = new Stack<>();
+        Stack<Character> rpn = new Stack<>();
         Stack<Character> operation = new Stack<>();
         for (char item : infixExpression) {
             if (Character.isDigit(item)) {
                 //如果是数字，直接输出
-                tempRPN.push(item);
+                rpn.push(item);
                 continue;
             }
             /*
@@ -54,7 +67,7 @@ public class INToRPN {
                     if (op == '(') {
                         break;
                     } else {
-                        tempRPN.push(op);
+                        rpn.push(op);
                     }
                 }
                 continue;
@@ -70,17 +83,17 @@ public class INToRPN {
                     operation.push(item);
                     break;
                 } else {
-                    tempRPN.push(operation.pop());
+                    rpn.push(operation.pop());
                 }
             }
 
         }
         //循环结束后，如果操作符栈还有元素，全部弹出
         while (!operation.isEmpty()) {
-            tempRPN.push(operation.pop());
+            rpn.push(operation.pop());
         }
-        while (!tempRPN.isEmpty()) {
-            rpn.push(tempRPN.pop());
+        while (!rpn.isEmpty()) {
+            this.rpn.push(rpn.pop());
         }
     }
 
@@ -108,6 +121,40 @@ public class INToRPN {
             return peek != '*' && peek != '/';
         }
         throw new IllegalArgumentException("参数错误");
+    }
+
+    public int evaluate() {
+        int result = 0;
+        int i, j;
+        Stack<Integer> resultStack = new Stack<>();
+        while (!rpn.isEmpty()) {
+            char item = rpn.pop();
+            if (Character.isDigit(item)) {
+                int numericValue = Character.getNumericValue(item);
+                resultStack.push(numericValue);
+            } else {
+                j = resultStack.pop();
+                i = resultStack.pop();
+                switch (item) {
+                    case '+':
+                        result = i + j;
+                        break;
+                    case '-':
+                        result = i - j;
+                        break;
+                    case '*':
+                        result = i * j;
+                        break;
+                    case '/':
+                        result = i / j;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("错误");
+                }
+                resultStack.push(result);
+            }
+        }
+        return resultStack.pop();
     }
 
     @Override
