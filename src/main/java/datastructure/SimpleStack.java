@@ -1,8 +1,5 @@
 package datastructure;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 /**
  * The type Simple stack.
  *
