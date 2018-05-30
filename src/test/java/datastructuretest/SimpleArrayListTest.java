@@ -45,4 +45,12 @@ public class SimpleArrayListTest {
         System.out.println("simpleArrayList.toString() = " + simpleArrayList.toString());
     }
 
+    @Test
+    public void tt() {
+        int[] arr = new int[]{1, 2, 3, 4, 5, 6};
+        for (int x : arr) {
+            System.out.println("我要开始 = " + x);
+        }
+    }
+
 }
