@@ -25,7 +25,7 @@ public class SimpleHashMap<K, V> {
      */
     public V put(K key, V value) {
         ensureCapacity(); //保证大小
-
+        size++;
         Node<K, V> newNode = new Node<>(hash(key), key, value, null); //实例化新节点
 
         //1、根据key计算出index
@@ -50,7 +50,6 @@ public class SimpleHashMap<K, V> {
             }
             //3、不存在，则在链表尾部添加新插入的这个节点
             oldNext.next = newNode;
-            size++;
             return value;
         }
     }
@@ -65,7 +64,7 @@ public class SimpleHashMap<K, V> {
         int index = index(key);
         Node<K, V> node = table[index];
         while (node != null) {
-            if (node.equals(key)) {
+            if (node.key.equals(key)) {
                 return node.value;
             }
             node = node.next;
@@ -86,7 +85,7 @@ public class SimpleHashMap<K, V> {
      * @return the int
      */
     private int index(K key) {
-        return 0;
+        return key.hashCode() & (table.length - 1);
     }
 
     /**
@@ -96,7 +95,7 @@ public class SimpleHashMap<K, V> {
      * @return the int
      */
     private int hash(K key) {
-        return 0;
+        return key.hashCode();
 
     }
 
