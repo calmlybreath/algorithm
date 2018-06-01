@@ -3,6 +3,8 @@ package datastructuretest;
 import datastructure.SimpleArrayList;
 import org.junit.*;
 
+import java.util.LinkedList;
+
 import static org.junit.Assert.assertEquals;
 
 public class SimpleArrayListTest {
@@ -18,7 +20,7 @@ public class SimpleArrayListTest {
 
     @After
     public void after() {
-        System.out.println("111 = " + 111);
+        //System.out.println("111 = " + 111);
     }
 
     @Test
@@ -47,10 +49,8 @@ public class SimpleArrayListTest {
 
     @Test
     public void tt() {
-        int[] arr = new int[]{1, 2, 3, 4, 5, 6};
-        for (int x : arr) {
-            System.out.println("我要开始 = " + x);
-        }
+        int[] table = new int[10];
+        System.out.println("table = " + table[0]);
     }
 
 }
