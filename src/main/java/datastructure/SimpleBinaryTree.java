@@ -1,5 +1,7 @@
 package datastructure;
 
+import java.util.Stack;
+
 /**
  * The type Simple binary tree.
  *
@@ -49,6 +51,37 @@ public class SimpleBinaryTree<T extends Comparable> {
                     return;
                 }
                 node = node.rightChildren;
+            }
+        }
+    }
+
+    public void order() {
+        Stack<Node<T>> nodeStack = new Stack<>();
+        Node<T> node = this.root;
+        while (true) {
+            if (node.leftChildren == null) {
+                System.out.println(node.element);
+                if (node.rightChildren != null) {
+                    node = node.rightChildren;
+                } else {
+                    if (nodeStack.empty()) {
+                        return;
+                    }
+                    while (!nodeStack.empty()) {
+                        Node<T> father = nodeStack.pop();
+                        System.out.println(father.element);
+                        node = father.rightChildren;
+                        if (node != null) {
+                            break;
+                        }
+                    }
+                    if (node == null) {
+                        return;
+                    }
+                }
+            } else {
+                nodeStack.push(node);
+                node = node.leftChildren;
             }
         }
     }
