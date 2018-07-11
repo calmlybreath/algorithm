@@ -4,6 +4,8 @@ import datastructure.SimpleBinaryTree;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class SimpleBinaryTreeTest {
     private SimpleBinaryTree<Integer> tree;
 
@@ -27,7 +29,8 @@ public class SimpleBinaryTreeTest {
         tree.add(18);
         tree.add(56);
         tree.add(1);
-        tree.order();
+        //tree.order();
+        tree.dfs();
     }
 
     @Test

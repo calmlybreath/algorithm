@@ -1,5 +1,7 @@
 package datastructure;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -58,8 +60,11 @@ public class SimpleBinaryTree<T extends Comparable> {
     public void order() {
         Stack<Node<T>> nodeStack = new Stack<>();
         Node<T> node = this.root;
-        while (true) {
-            if (node.leftChildren == null) {
+        while (node != null) {
+            if (node.leftChildren != null) {
+                nodeStack.push(node);
+                node = node.leftChildren;
+            } else {
                 System.out.println(node.element);
                 if (node.rightChildren != null) {
                     node = node.rightChildren;
@@ -75,13 +80,40 @@ public class SimpleBinaryTree<T extends Comparable> {
                             break;
                         }
                     }
-                    if (node == null) {
-                        return;
-                    }
                 }
-            } else {
-                nodeStack.push(node);
+            }
+        }
+    }
+
+    public void preOrder() {
+        Stack<Node<T>> stack = new Stack<>();
+        Node<T> node = root;
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
                 node = node.leftChildren;
+            }
+            if (!stack.isEmpty()) {
+                Node<T> pop = stack.pop();
+                System.out.println("pop = " + pop.element);
+                node = pop.rightChildren;
+            }
+        }
+    }
+
+    public void dfs() {
+        LinkedList<Node<T>> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+        }
+        while (!queue.isEmpty()) {
+            Node<T> node = queue.poll();
+            System.out.println(node.element);
+            if (node.leftChildren != null) {
+                queue.add(node.leftChildren);
+            }
+            if (node.rightChildren != null) {
+                queue.add(node.rightChildren);
             }
         }
     }
