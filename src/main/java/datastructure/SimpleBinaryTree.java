@@ -1,7 +1,7 @@
 package datastructure;
 
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 /**
@@ -33,59 +33,136 @@ public class SimpleBinaryTree<T extends Comparable> {
      * @param element the element
      */
     @SuppressWarnings("unchecked")
-    public void add(T element) {
+    public Node<T> add(T element) {
         Node<T> newNode = new Node<T>(null, element, null);
         if (root == null) {
             root = new Node<>(null, element, null);
-            return;
+            return null;
         }
         Node<T> node = this.root;
         while (true) {
             if (element.compareTo(node.element) <= 0) {
                 if (node.leftChildren == null) {
                     node.leftChildren = newNode;
-                    return;
+                    return node;
                 }
                 node = node.leftChildren;
             } else {
                 if (node.rightChildren == null) {
                     node.rightChildren = newNode;
-                    return;
+                    return node;
                 }
                 node = node.rightChildren;
             }
         }
     }
 
-    public void order() {
-        Stack<Node<T>> nodeStack = new Stack<>();
-        Node<T> node = this.root;
-        while (node != null) {
-            if (node.leftChildren != null) {
-                nodeStack.push(node);
-                node = node.leftChildren;
+    /*
+     *   查找节点，并返回父节点，当目标节点是root时，返回null
+     * */
+    @SuppressWarnings("unchecked")
+    public NodeInfo<T> find(T element) {
+        if (root == null) {
+            throw new NoSuchElementException();
+        }
+        Node<T> parentNode = null;
+        Node<T> currentNode = root;
+        boolean isLeft = false;
+        while (currentNode != null) {
+            if (element.compareTo(currentNode.element) < 0) {
+                parentNode = currentNode;
+                currentNode = currentNode.leftChildren;
+                isLeft = true;
+            } else if (element.compareTo(currentNode.element) > 0) {
+                parentNode = currentNode;
+                currentNode = currentNode.rightChildren;
+                isLeft = false;
             } else {
-                System.out.println(node.element);
-                if (node.rightChildren != null) {
-                    node = node.rightChildren;
-                } else {
-                    if (nodeStack.empty()) {
-                        return;
-                    }
-                    while (!nodeStack.empty()) {
-                        Node<T> father = nodeStack.pop();
-                        System.out.println(father.element);
-                        node = father.rightChildren;
-                        if (node != null) {
-                            break;
-                        }
-                    }
-                }
+                return new NodeInfo<>(parentNode, currentNode, isLeft);
+            }
+        }
+        throw new NoSuchElementException();
+    }
+
+    public void remove(T element) {
+        NodeInfo<T> nodeInfo = find(element);
+        Node<T> willBeDeletedNode = nodeInfo.getCurrentNode();
+        //1、如果没有左右孩子
+        if (willBeDeletedNode.leftChildren == null && willBeDeletedNode.rightChildren == null) {
+            //如果是根节点
+            if(nodeInfo.parentNode==null){
+                root=null;
+                return;
+            }
+            if(nodeInfo.isLeft){
+                nodeInfo.parentNode.leftChildren=null;
+            }else {
+                nodeInfo.parentNode.rightChildren=null;
+            }
+            return;
+        }
+        //2、有一个孩子时
+        if (willBeDeletedNode.leftChildren == null && willBeDeletedNode.rightChildren != null) {
+            Node<T> parent;
+            if (nodeInfo.getParentNode() == null) {
+                parent = root;
+            } else {
+                parent = nodeInfo.getParentNode();
+            }
+            if (nodeInfo.isLeft) {
+                parent.leftChildren = willBeDeletedNode.leftChildren;
+            } else {
+                parent.rightChildren = willBeDeletedNode.rightChildren;
+            }
+        }
+        if (willBeDeletedNode.leftChildren != null && willBeDeletedNode.rightChildren == null) {
+            Node<T> parent;
+            if (nodeInfo.getParentNode() == null) {
+                parent = root;
+            } else {
+                parent = nodeInfo.getParentNode();
+            }
+            if (!nodeInfo.isLeft) {
+                parent.rightChildren = willBeDeletedNode.leftChildren;
+            } else {
+                parent.leftChildren = willBeDeletedNode.rightChildren;
+            }
+        }
+
+        //3 如果目标节点有两个孩子,寻找左字树最大的元素
+        Node<T> maxChild = findAndMoveMaxChild(willBeDeletedNode.leftChildren);
+        if (nodeInfo.parentNode == null) {
+            maxChild.leftChildren = willBeDeletedNode.leftChildren;
+            maxChild.rightChildren = willBeDeletedNode.rightChildren;
+            root=maxChild;
+        } else {
+            maxChild.rightChildren=willBeDeletedNode.rightChildren;
+            if (nodeInfo.isLeft) {
+                nodeInfo.parentNode.leftChildren = maxChild;
+            } else {
+                nodeInfo.parentNode.rightChildren = maxChild;
             }
         }
     }
 
-    public void preOrder() {
+    private Node<T> findAndMoveMaxChild(Node<T> node) {
+        if (node.rightChildren == null) {
+            return node;
+        }
+        Node<T> parentNode = null;
+        Node<T> currentNode = node;
+        while (currentNode.rightChildren != null) {
+            parentNode = currentNode;
+            currentNode = currentNode.rightChildren;
+        }
+        parentNode.rightChildren = null;
+        return currentNode;
+    }
+
+    /*
+     *  深度遍历
+     * */
+    public void dfs() {
         Stack<Node<T>> stack = new Stack<>();
         Node<T> node = root;
         while (node != null || !stack.isEmpty()) {
@@ -101,7 +178,10 @@ public class SimpleBinaryTree<T extends Comparable> {
         }
     }
 
-    public void dfs() {
+    /*
+     * 广度遍历
+     * */
+    public void bfs() {
         LinkedList<Node<T>> queue = new LinkedList<>();
         if (root != null) {
             queue.add(root);
@@ -123,7 +203,7 @@ public class SimpleBinaryTree<T extends Comparable> {
      *
      * @param <T> the type parameter
      */
-    static class Node<T> {
+    public static class Node<T> {
         private T element;
         private Node<T> leftChildren;
         private Node<T> rightChildren;
@@ -193,6 +273,26 @@ public class SimpleBinaryTree<T extends Comparable> {
          */
         public void setRightChildren(Node<T> rightChildren) {
             this.rightChildren = rightChildren;
+        }
+    }
+
+    public static class NodeInfo<T> {
+        private Node<T> parentNode;
+        private Node<T> currentNode;
+        private boolean isLeft;
+
+        public NodeInfo(Node<T> parentNode, Node<T> currentNode, boolean isLeft) {
+            this.parentNode = parentNode;
+            this.currentNode = currentNode;
+            this.isLeft = isLeft;
+        }
+
+        public Node<T> getParentNode() {
+            return parentNode;
+        }
+
+        public Node<T> getCurrentNode() {
+            return currentNode;
         }
     }
 }
