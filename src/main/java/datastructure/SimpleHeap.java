@@ -49,9 +49,7 @@ public class SimpleHeap<T extends Comparable> {
                 return;
             }
             //swap
-            Object temp = heap[parentIndex];
-            heap[parentIndex] = heap[currentIndex];
-            heap[currentIndex] = temp;
+            swap(heap, parentIndex, currentIndex);
             currentIndex = parentIndex;
         }
     }
@@ -90,15 +88,19 @@ public class SimpleHeap<T extends Comparable> {
                 max = leftIndex;
             }
             if (((T) heap[parentIndex]).compareTo((T) heap[max]) < 0) {
-                Object temp = heap[max];
-                heap[max] = heap[parentIndex];
-                heap[parentIndex] = temp;
+                swap(heap, max, parentIndex);
                 parentIndex = max;
             } else {
                 return (T) headElement;
             }
         }
         return (T) headElement;
+    }
+
+    private void swap(Object[] src, int a, int b) {
+        Object temp = heap[a];
+        heap[a] = heap[b];
+        heap[b] = temp;
     }
 
     private void ensureCapacity() {
